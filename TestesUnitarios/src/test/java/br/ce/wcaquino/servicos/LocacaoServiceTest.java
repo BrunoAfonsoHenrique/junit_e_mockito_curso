@@ -3,6 +3,7 @@ package br.ce.wcaquino.servicos;
 import java.util.Date;
 
 import org.hamcrest.CoreMatchers;
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
@@ -51,6 +52,29 @@ public class LocacaoServiceTest {
 		Locacao locacao;
 				
 		locacao = locacaoService.alugarFilme(usuario, filme);
+	}
+	
+	//Estratégia Robusta - Vantagem: Pode verficar a mensagem lançada na exceção
+	@Test
+	public void testeLocacao_filmeSemEstoque_2() {
+			
+		// Cenario
+		LocacaoService locacaoService = new LocacaoService();
+		Usuario usuario = new Usuario();
+		Filme filme = new Filme("Harry Potter", 0, 5.0);
+	
+		// Ação
+		Locacao locacao;
+						
+		try {
+			locacao = locacaoService.alugarFilme(usuario, filme);
+			Assert.fail("Deveria ter lançado uma exceçao");
+			
+		} catch (Exception e) {
+			
+			Assert.assertThat(e.getMessage(), CoreMatchers.is("Filme sem estoque"));
+		}
+	
 	}
 	
 
