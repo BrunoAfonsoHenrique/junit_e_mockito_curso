@@ -13,6 +13,7 @@ import br.ce.wcaquino.entidades.Filme;
 import br.ce.wcaquino.entidades.Locacao;
 import br.ce.wcaquino.entidades.Usuario;
 import br.ce.wcaquino.exceptions.FilmeSemEstoqueException;
+import br.ce.wcaquino.exceptions.LocadoraException;
 import br.ce.wcaquino.utils.DataUtils;
 
 public class LocacaoServiceTest {
@@ -59,6 +60,45 @@ public class LocacaoServiceTest {
 		// Ação		
 		locacaoService.alugarFilme(usuario, filme);
 	}
+	
+	
+	@Test
+	public void deve_testar_UsuarioVazio() throws FilmeSemEstoqueException {
+		
+		LocacaoService locacaoService = new LocacaoService();
+		Filme filme = new Filme("Avatar", 2, 25.0);
+		
+		try {
+			locacaoService.alugarFilme(null, filme);
+			Assert.fail();
+		}  catch (LocadoraException e) {
+			//Checar a mensagem 
+			Assert.assertThat(e.getMessage(), CoreMatchers.is("Usuario vazio"));
+		}
+		
+	}
+	
+	
+	@Test
+	public void deve_testar_FilmeVazio() throws FilmeSemEstoqueException, LocadoraException {
+		
+		LocacaoService locacaoService = new LocacaoService();
+		Usuario usuario = new Usuario("Jeferson");
+		
+		exception.expect(LocadoraException.class);
+		exception.expectMessage("Filme vazio");
+		
+		locacaoService.alugarFilme(usuario, null);
+	}
+	
+	
+//	Forma elegante -> funciona bem quando apenas a exceção é o que importa, seria nos casos que você consegue garantir o motivo pelo qual a exceção foi lançada
+//	
+//	Forma robusta e forma nova -> Se você precisar da mensagem, você vai precisar de uma das duas
+//	
+//	Forma nova -> atende na grande maioria dos casos
+//	
+//	Recomendação -> Forma robusta
 	
 
 }
