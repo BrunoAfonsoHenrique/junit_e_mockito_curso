@@ -1,6 +1,8 @@
 package br.ce.wcaquino.servicos;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
@@ -39,10 +41,10 @@ public class LocacaoServiceTest {
 
 		// Cenario
 		Usuario usuario = new Usuario();
-		Filme filme = new Filme("Harry Potter", 2, 5.0);
+		List<Filme> filmes = Arrays.asList(new Filme("Harry Potter", 2, 5.0));
 
 		// Ação
-		Locacao locacao = locacaoService.alugarFilme(usuario, filme);
+		Locacao locacao = locacaoService.alugarFilme(usuario, filmes);
 			
 		// Verificação
 		errorCollector.checkThat(locacao.getValor(), CoreMatchers.is(CoreMatchers.equalTo(5.0))); // Verifique que o valor da locação é igual a 5.0
@@ -60,10 +62,10 @@ public class LocacaoServiceTest {
 		
 		// Cenario
 		Usuario usuario = new Usuario();
-		Filme filme = new Filme("Harry Potter", 0, 5.0);
-
+		List<Filme> filmes = Arrays.asList(new Filme("Harry Potter", 0, 5.0));
+		
 		// Ação		
-		locacaoService.alugarFilme(usuario, filme);
+		locacaoService.alugarFilme(usuario, filmes);
 	}
 	
 	
@@ -71,10 +73,10 @@ public class LocacaoServiceTest {
 	public void deve_testar_UsuarioVazio() throws FilmeSemEstoqueException {
 		
 		
-		Filme filme = new Filme("Avatar", 2, 25.0);
+		List<Filme> filmes = Arrays.asList(new Filme("Harry Potter", 2, 5.0));
 		
 		try {
-			locacaoService.alugarFilme(null, filme);
+			locacaoService.alugarFilme(null, filmes);
 			Assert.fail();
 		}  catch (LocadoraException e) {
 			//Checar a mensagem 
