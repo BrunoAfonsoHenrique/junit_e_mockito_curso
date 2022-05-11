@@ -7,6 +7,7 @@ import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
+import org.junit.rules.ExpectedException;
 
 import br.ce.wcaquino.entidades.Filme;
 import br.ce.wcaquino.entidades.Locacao;
@@ -17,7 +18,11 @@ public class LocacaoServiceTest {
 		
 	@Rule
 	public ErrorCollector errorCollector= new ErrorCollector();
-
+	
+	@Rule
+    public ExpectedException exception = ExpectedException.none();
+	
+	
 	@Test
 	public void testeLocacao() throws Exception {
 
@@ -48,10 +53,8 @@ public class LocacaoServiceTest {
 		Usuario usuario = new Usuario();
 		Filme filme = new Filme("Harry Potter", 0, 5.0);
 
-		// Ação
-		Locacao locacao;
-				
-		locacao = locacaoService.alugarFilme(usuario, filme);
+		// Ação		
+		locacaoService.alugarFilme(usuario, filme);
 	}
 	
 	//Estratégia Robusta - Vantagem: Pode verficar a mensagem lançada na exceção
@@ -63,17 +66,32 @@ public class LocacaoServiceTest {
 		Usuario usuario = new Usuario();
 		Filme filme = new Filme("Harry Potter", 0, 5.0);
 	
-		// Ação
-		Locacao locacao;
-						
+		// Ação				
 		try {
-			locacao = locacaoService.alugarFilme(usuario, filme);
+			locacaoService.alugarFilme(usuario, filme);
 			Assert.fail("Deveria ter lançado uma exceçao");
 			
 		} catch (Exception e) {
 			
 			Assert.assertThat(e.getMessage(), CoreMatchers.is("Filme sem estoque"));
 		}
+	
+	}
+	
+	// Estratégia da forma nova - Tratamento dessa exceção será através de uma outra Rule: ExpectedException
+	@Test
+	public void testeLocacao_filmeSemEstoque_3() throws Exception {
+		
+		// Cenario
+		LocacaoService locacaoService = new LocacaoService();
+		Usuario usuario = new Usuario();
+		Filme filme = new Filme("Harry Potter", 0, 5.0);
+		
+		exception.expect(Exception.class);
+		exception.expectMessage("Filme sem estoque");
+		
+		//Ação
+		locacaoService.alugarFilme(usuario, filme);
 	
 	}
 	
