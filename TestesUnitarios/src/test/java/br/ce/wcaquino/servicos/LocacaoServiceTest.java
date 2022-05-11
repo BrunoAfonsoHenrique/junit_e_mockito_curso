@@ -12,6 +12,7 @@ import org.junit.rules.ExpectedException;
 import br.ce.wcaquino.entidades.Filme;
 import br.ce.wcaquino.entidades.Locacao;
 import br.ce.wcaquino.entidades.Usuario;
+import br.ce.wcaquino.exceptions.FilmeSemEstoqueException;
 import br.ce.wcaquino.utils.DataUtils;
 
 public class LocacaoServiceTest {
@@ -44,8 +45,23 @@ public class LocacaoServiceTest {
 		
 	}
 	
-	//Estratégia elegante
-	@Test(expected = Exception.class)
+	
+//	Estratégia elegante
+//	@Test(expected = Exception.class)
+//	public void testeLocacao_filmeSemEstoque() throws Exception {
+//		
+//		// Cenario
+//		LocacaoService locacaoService = new LocacaoService();
+//		Usuario usuario = new Usuario();
+//		Filme filme = new Filme("Harry Potter", 0, 5.0);
+//
+//		// Ação		
+//		locacaoService.alugarFilme(usuario, filme);
+//	}
+	
+	//Estratégia elegante - Você pode mudar de Exception para FilmeSemEstoqueException, pois FilmeSemEstoqueException extends Exception
+	// Tem que ter a garantia que a excessão esta vindo apenas por um motivo
+	@Test(expected = FilmeSemEstoqueException.class)
 	public void testeLocacao_filmeSemEstoque() throws Exception {
 		
 		// Cenario
