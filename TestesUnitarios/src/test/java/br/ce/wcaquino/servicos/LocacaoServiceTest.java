@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
@@ -17,6 +18,8 @@ import br.ce.wcaquino.exceptions.LocadoraException;
 import br.ce.wcaquino.utils.DataUtils;
 
 public class LocacaoServiceTest {
+	
+	private LocacaoService locacaoService;
 		
 	@Rule
 	public ErrorCollector errorCollector= new ErrorCollector();
@@ -24,19 +27,22 @@ public class LocacaoServiceTest {
 	@Rule
     public ExpectedException exception = ExpectedException.none();
 	
-	
+	@Before
+	public void init() {
+		
+		locacaoService = new LocacaoService();
+		
+	}
+
 	@Test
 	public void testeLocacao() throws Exception {
 
 		// Cenario
-		LocacaoService locacaoService = new LocacaoService();
 		Usuario usuario = new Usuario();
 		Filme filme = new Filme("Harry Potter", 2, 5.0);
 
 		// Ação
-		Locacao locacao;
-		
-		locacao = locacaoService.alugarFilme(usuario, filme);
+		Locacao locacao = locacaoService.alugarFilme(usuario, filme);
 			
 		// Verificação
 		errorCollector.checkThat(locacao.getValor(), CoreMatchers.is(CoreMatchers.equalTo(5.0))); // Verifique que o valor da locação é igual a 5.0
@@ -53,7 +59,6 @@ public class LocacaoServiceTest {
 	public void testeLocacao_filmeSemEstoque() throws Exception {
 		
 		// Cenario
-		LocacaoService locacaoService = new LocacaoService();
 		Usuario usuario = new Usuario();
 		Filme filme = new Filme("Harry Potter", 0, 5.0);
 
@@ -65,7 +70,7 @@ public class LocacaoServiceTest {
 	@Test
 	public void deve_testar_UsuarioVazio() throws FilmeSemEstoqueException {
 		
-		LocacaoService locacaoService = new LocacaoService();
+		
 		Filme filme = new Filme("Avatar", 2, 25.0);
 		
 		try {
@@ -82,7 +87,7 @@ public class LocacaoServiceTest {
 	@Test
 	public void deve_testar_FilmeVazio() throws FilmeSemEstoqueException, LocadoraException {
 		
-		LocacaoService locacaoService = new LocacaoService();
+		
 		Usuario usuario = new Usuario("Jeferson");
 		
 		exception.expect(LocadoraException.class);
@@ -91,14 +96,4 @@ public class LocacaoServiceTest {
 		locacaoService.alugarFilme(usuario, null);
 	}
 	
-	
-//	Forma elegante -> funciona bem quando apenas a exceção é o que importa, seria nos casos que você consegue garantir o motivo pelo qual a exceção foi lançada
-//	
-//	Forma robusta e forma nova -> Se você precisar da mensagem, você vai precisar de uma das duas
-//	
-//	Forma nova -> atende na grande maioria dos casos
-//	
-//	Recomendação -> Forma robusta
-	
-
 }
