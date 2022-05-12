@@ -48,7 +48,7 @@ public class CalculoValorLocacaoTeste {
 	private static Filme filme5 = new Filme("Filme 5", 2, 4.0);
 	private static Filme filme6 = new Filme("Filme 6", 2, 4.0);
 	
-	@Parameters(name="Teste {index} = {0} - {1}")
+	@Parameters(name="{2}")
 	public static Collection<Object[]> getParametros() {
 		
 		return Arrays.asList(new Object[][] {
