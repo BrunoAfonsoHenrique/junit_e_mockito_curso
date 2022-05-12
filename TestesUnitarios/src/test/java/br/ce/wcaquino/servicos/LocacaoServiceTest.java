@@ -19,6 +19,8 @@ import br.ce.wcaquino.entidades.Locacao;
 import br.ce.wcaquino.entidades.Usuario;
 import br.ce.wcaquino.exceptions.FilmeSemEstoqueException;
 import br.ce.wcaquino.exceptions.LocadoraException;
+import br.ce.wcaquino.matchers.DiaSemanaMatcher;
+import br.ce.wcaquino.matchers.MatchersProprios;
 import br.ce.wcaquino.utils.DataUtils;
 
 public class LocacaoServiceTest {
@@ -104,64 +106,6 @@ public class LocacaoServiceTest {
 	
 	
 	@Test
-	public void deve_pagar75Porcento_noFilmeTres() throws FilmeSemEstoqueException, LocadoraException {
-		
-		Usuario usuario = new Usuario("Jeferson");
-		List<Filme> filmes = Arrays.asList(new Filme("Filme 1", 2, 4.0), new Filme("Filme 2", 2, 4.0), new Filme("Filme 3", 2, 4.0));
-		
-		Locacao resultado = locacaoService.alugarFilme(usuario, filmes);
-		
-		Assert.assertThat(resultado.getValor(), CoreMatchers.is(11.0));
-		
-	}
-	
-	@Test
-	public void deve_pagar75Porcento_noFilmeQuatro() throws FilmeSemEstoqueException, LocadoraException {
-		
-		Usuario usuario = new Usuario("Jeferson");
-		List<Filme> filmes = Arrays.asList(new Filme("Filme 1", 2, 4.0), new Filme("Filme 2", 2, 4.0), new Filme("Filme 3", 2, 4.0), new Filme("Filme 4", 2, 4.0));
-		
-		Locacao resultado = locacaoService.alugarFilme(usuario, filmes);
-		
-		Assert.assertThat(resultado.getValor(), CoreMatchers.is(13.0));
-		
-	}
-	
-	@Test
-	public void deve_pagar75Porcento_noFilmeCinco() throws FilmeSemEstoqueException, LocadoraException {
-		
-		Usuario usuario = new Usuario("Jeferson");
-		List<Filme> filmes = Arrays.asList(new Filme("Filme 1", 2, 4.0), 
-										new Filme("Filme 2", 2, 4.0), 
-										new Filme("Filme 3", 2, 4.0), 
-										new Filme("Filme 4", 2, 4.0), 
-										new Filme("Filme 5", 2, 4.0));
-		
-		Locacao resultado = locacaoService.alugarFilme(usuario, filmes);
-		
-		Assert.assertThat(resultado.getValor(), CoreMatchers.is(14.0));
-		
-	}
-	
-	@Test
-	public void deve_pagar75Porcento_noFilmeSeis() throws FilmeSemEstoqueException, LocadoraException {
-		
-		Usuario usuario = new Usuario("Jeferson");
-		List<Filme> filmes = Arrays.asList(new Filme("Filme 1", 2, 4.0), 
-										new Filme("Filme 2", 2, 4.0), 
-										new Filme("Filme 3", 2, 4.0), 
-										new Filme("Filme 4", 2, 4.0), 
-										new Filme("Filme 5", 2, 4.0),
-										new Filme("Filme 6", 2, 4.0));
-		
-		Locacao resultado = locacaoService.alugarFilme(usuario, filmes);
-		
-		Assert.assertThat(resultado.getValor(), CoreMatchers.is(14.0));
-		
-	}
-	
-	
-	@Test
 	public void deveDevolverFilmeNaSegundAoAlugarNoSabado() throws FilmeSemEstoqueException, LocadoraException {
 		
 		Assume.assumeTrue(DataUtils.verificarDiaSemana(new Date(), Calendar.SATURDAY)); // Assumptions
@@ -174,6 +118,11 @@ public class LocacaoServiceTest {
 		boolean ehSegunda = DataUtils.verificarDiaSemana(retorno.getDataRetorno(), Calendar.MONDAY);
 		
 		Assert.assertTrue(ehSegunda);
+		
+		//Criação de matchers próprios para usar no assertThat
+//		Assert.assertThat(retorno.getDataRetorno(), new DiaSemanaMatcher(Calendar.MONDAY));
+		Assert.assertThat(retorno.getDataRetorno(), MatchersProprios.caiEm(Calendar.SUNDAY));
+		Assert.assertThat(retorno.getDataRetorno(), MatchersProprios.caiNumaSegunda());
 	}
 	
 }
