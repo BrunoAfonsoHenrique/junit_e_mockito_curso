@@ -19,7 +19,6 @@ import br.ce.wcaquino.entidades.Locacao;
 import br.ce.wcaquino.entidades.Usuario;
 import br.ce.wcaquino.exceptions.FilmeSemEstoqueException;
 import br.ce.wcaquino.exceptions.LocadoraException;
-import br.ce.wcaquino.matchers.DiaSemanaMatcher;
 import br.ce.wcaquino.matchers.MatchersProprios;
 import br.ce.wcaquino.utils.DataUtils;
 
@@ -55,8 +54,9 @@ public class LocacaoServiceTest {
 		// Verificação
 		errorCollector.checkThat(locacao.getValor(), CoreMatchers.is(CoreMatchers.equalTo(5.0))); // Verifique que o valor da locação é igual a 5.0
 		errorCollector.checkThat(DataUtils.isMesmaData(locacao.getDataLocacao(), new Date()), CoreMatchers.is(true));
+		errorCollector.checkThat(locacao.getDataLocacao(), MatchersProprios.ehHoje());
 		errorCollector.checkThat(DataUtils.isMesmaData(locacao.getDataRetorno(), DataUtils.obterDataComDiferencaDias(1)), CoreMatchers.is(true));
-	
+		errorCollector.checkThat(locacao.getDataRetorno(), MatchersProprios.ehHojeComDiferencaDias(1));
 		
 	}
 		
