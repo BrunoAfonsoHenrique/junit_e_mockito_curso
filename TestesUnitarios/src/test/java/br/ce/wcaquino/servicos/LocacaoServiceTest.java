@@ -13,13 +13,15 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 import org.junit.rules.ExpectedException;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
 import br.ce.wcaquino.builders.FilmeBuilder;
 import br.ce.wcaquino.builders.LocacaoBuilder;
 import br.ce.wcaquino.builders.UsuarioBuilder;
 import br.ce.wcaquino.daos.LocacaoDAO;
-import br.ce.wcaquino.daos.LocacaoDAOFake;
 import br.ce.wcaquino.entidades.Filme;
 import br.ce.wcaquino.entidades.Locacao;
 import br.ce.wcaquino.entidades.Usuario;
@@ -30,12 +32,16 @@ import br.ce.wcaquino.utils.DataUtils;
 
 public class LocacaoServiceTest {
 	
+	@InjectMocks
 	private LocacaoService locacaoService;
 	
+	@Mock
 	private LocacaoDAO dao;
 	
+	@Mock
 	private SPCService spc;
 	
+	@Mock
 	private EmailService emailService;
 		
 	@Rule
@@ -44,16 +50,13 @@ public class LocacaoServiceTest {
 	@Rule
     public ExpectedException exception = ExpectedException.none();
 	
+	@SuppressWarnings("deprecation")
 	@Before
 	public void init() {
 		
-		locacaoService = new LocacaoService();
-		dao = Mockito.mock(LocacaoDAO.class);
-		locacaoService.setLocacacaoDAO(dao);
-		spc = Mockito.mock(SPCService.class);
-		locacaoService.setSPCService(spc);
-		emailService = Mockito.mock(EmailService.class);
-		locacaoService.setEmailService(emailService);
+		MockitoAnnotations.initMocks(this);
+		
+		
 	}
 
 	@Test
