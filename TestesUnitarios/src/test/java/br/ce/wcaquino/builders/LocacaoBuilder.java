@@ -15,6 +15,7 @@ import br.ce.wcaquino.entidades.Filme;
 import br.ce.wcaquino.entidades.Locacao;
 
 public class LocacaoBuilder {
+	
 	private Locacao elemento;
 
 	public LocacaoBuilder() {
@@ -56,6 +57,7 @@ public class LocacaoBuilder {
 		elemento.setDataRetorno(param);
 		return this;
 	}
+	
 
 	public LocacaoBuilder atrasada() {
 		elemento.setDataLocacao(DataUtils.obterDataComDiferencaDias(-4));

@@ -147,7 +147,7 @@ public class LocacaoServiceTest {
 		//Usuario usuario2 = UsuarioBuilder.umUsuario().comNome("Usuario 2").agora();
 		List<Filme> filmes = Arrays.asList(FilmeBuilder.umFilme().agora());
 		
-		Mockito.when(spc.possuiNegativacao(usuario)).thenReturn(true);
+		Mockito.when(spc.possuiNegativacao(Mockito.any(Usuario.class))).thenReturn(true);
 		
 		
 		try {
@@ -166,23 +166,27 @@ public class LocacaoServiceTest {
 	public void deveEnviarEmailParaLocacoesAtrasadas() {
 		
 		Usuario usuario = UsuarioBuilder.umUsuario().agora();
-		//Usuario usuario2 = UsuarioBuilder.umUsuario().comNome("Usuario 2").agora();
+		Usuario usuario2 = UsuarioBuilder.umUsuario().comNome("Usuario em dia").agora();
+		Usuario usuario3 = UsuarioBuilder.umUsuario().comNome("Outro atrasado").agora();
 		
-		List<Locacao> locacoes = 
-				Arrays.asList(
-						LocacaoBuilder.umLocacao()
-						.comUsuario(usuario)
-						.comDataRetorno(DataUtils.obterDataComDiferencaDias(-2))
-						.agora());
+		List<Locacao> locacoes = Arrays.asList(
+						LocacaoBuilder.umLocacao().atrasada().comUsuario(usuario).atrasada().agora(),
+						LocacaoBuilder.umLocacao().comUsuario(usuario2).agora(),
+						LocacaoBuilder.umLocacao().atrasada().comUsuario(usuario3).atrasada().agora(),
+						LocacaoBuilder.umLocacao().atrasada().comUsuario(usuario3).atrasada().agora());
 		
 		Mockito.when(dao.obterLocacoesPendentes()).thenReturn(locacoes);
 		
 		locacaoService.notificarAtrasos();
 		
+		Mockito.verify(emailService, Mockito.times(3)).notificarAtraso(Mockito.any(Usuario.class)); // Qualquer instancia da classe usuário // any não serve apenas para objetos, serve para tipos primiticos tbm
 		Mockito.verify(emailService).notificarAtraso(usuario);
-		
-		
-		
+		Mockito.verify(emailService, Mockito.atLeastOnce()).notificarAtraso(usuario3);
+		Mockito.verify(emailService, Mockito.never()).notificarAtraso(usuario2);
+		Mockito.verifyNoMoreInteractions(emailService);
+	
 	}
+	
+	
 	
 }
